@@ -5,4 +5,4 @@ GameFramework（简称GF）是一套整合Unity3D，Orleans，MongoDB等第三�
 性和较低的延时响应。
 
 GF.Gateway是GF的子模块，作为Unity3D与Orleans通信中介。使用DotNetty和
-ProtoBuf实现。
+Protobuf实现。
