@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E9DAB874-000B-4DA4-9434-F6AE0EDB113E}</ProjectGuid>
+    <ProjectGuid>{95777C31-1698-4EB5-B86E-1394DB9FBF76}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Test.Gateway</RootNamespace>
-    <AssemblyName>Test.Gateway</AssemblyName>
+    <RootNamespace>Test.Client</RootNamespace>
+    <AssemblyName>Test.Client</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,8 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,31 +31,30 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetty.Buffers, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetty.Buffers.0.3.1\lib\net45\DotNetty.Buffers.dll</HintPath>
+    <Reference Include="DotNetty.Buffers, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetty.Buffers.0.3.2\lib\net45\DotNetty.Buffers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetty.Codecs, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetty.Codecs.0.3.1\lib\net45\DotNetty.Codecs.dll</HintPath>
+    <Reference Include="DotNetty.Codecs, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetty.Codecs.0.3.2\lib\net45\DotNetty.Codecs.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetty.Codecs.Mqtt, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetty.Codecs.Mqtt.0.3.1\lib\net45\DotNetty.Codecs.Mqtt.dll</HintPath>
+    <Reference Include="DotNetty.Codecs.Mqtt, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetty.Codecs.Mqtt.0.3.2\lib\net45\DotNetty.Codecs.Mqtt.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetty.Common, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetty.Common.0.3.1\lib\net45\DotNetty.Common.dll</HintPath>
+    <Reference Include="DotNetty.Common, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetty.Common.0.3.2\lib\net45\DotNetty.Common.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetty.Handlers, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetty.Handlers.0.3.1\lib\net45\DotNetty.Handlers.dll</HintPath>
+    <Reference Include="DotNetty.Handlers, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetty.Handlers.0.3.2\lib\net45\DotNetty.Handlers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="DotNetty.Transport, Version=0.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetty.Transport.0.3.1\lib\net45\DotNetty.Transport.dll</HintPath>
+    <Reference Include="DotNetty.Transport, Version=0.3.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetty.Transport.0.3.2\lib\net45\DotNetty.Transport.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GF.Unity.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -94,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -102,15 +100,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GF.Gateway\GF.Gateway.csproj">
-      <Project>{ac5f7ffb-06f1-4584-bfcb-4de86c3e1aee}</Project>
-      <Name>GF.Gateway</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="ClientConfiguration.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

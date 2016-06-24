@@ -15,20 +15,22 @@ namespace GF.Gateway
     using DotNetty.Transport.Bootstrapping;
     using DotNetty.Transport.Channels;
     using DotNetty.Transport.Channels.Sockets;
+    using Orleans;
 
-    class Program
+    public class Gateway
     {
-        static async Task RunServerAsync()
+        MultithreadEventLoopGroup bossGroup = new MultithreadEventLoopGroup(1);
+        MultithreadEventLoopGroup workerGroup = new MultithreadEventLoopGroup();
+        ServerBootstrap bootstrap = new ServerBootstrap();
+        IChannel bootstrapChannel = null;
+
+        // GatewaySettings.Port
+        // "ClientConfiguration.xml"
+        public async Task Start(string ip, int port, string orleansClientConfigFile)
         {
-            Console.WriteLine("Gateway Start, ThreadName=" + System.Threading.Thread.CurrentThread.ManagedThreadId);
+            //Console.WriteLine("Gateway Start, ThreadName=" + System.Threading.Thread.CurrentThread.ManagedThreadId);
 
-            var bossGroup = new MultithreadEventLoopGroup(1);
-            var workerGroup = new MultithreadEventLoopGroup();
-
-            try
-            {
-                var bootstrap = new ServerBootstrap();
-                bootstrap
+            bootstrap
                     .Group(bossGroup, workerGroup)
                     .Channel<TcpServerSocketChannel>()
                     .Option(ChannelOption.SoBacklog, 100)
@@ -41,9 +43,16 @@ namespace GF.Gateway
                         pipeline.AddLast(new GatewayHandler());
                     }));
 
-                IChannel bootstrapChannel = await bootstrap.BindAsync(GatewaySettings.Port);
+            bootstrapChannel = await bootstrap.BindAsync(port);
 
-                Console.ReadLine();
+            GrainClient.Initialize(orleansClientConfigFile);
+        }
+
+        public async Task Stop()
+        {
+            try
+            {
+                GrainClient.Uninitialize();
 
                 await bootstrapChannel.CloseAsync();
             }
@@ -53,9 +62,10 @@ namespace GF.Gateway
             }
         }
 
-        static void Main(string[] args)
-        {
-            RunServerAsync().Wait();
-        }
+        //Console.ReadLine();
+        //static void Main(string[] args)
+        //{
+        //    RunServerAsync().Wait();
+        //}
     }
 }

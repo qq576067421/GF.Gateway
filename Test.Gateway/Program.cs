@@ -15,46 +15,24 @@ namespace Test.Gateway
     using System.Net;
     using System.Text;
     using System.Threading.Tasks;
-
+    using GF.Gateway;
 
     class Program
     {
-        static async Task RunClientAsync()
+        static async Task RunGatewayAsync()
         {
+            Console.WriteLine("Gateway Start, ThreadName=" + System.Threading.Thread.CurrentThread.ManagedThreadId);
+
             IPAddress host = IPAddress.Parse("127.0.0.1");
             int port = 5882;
+            Gateway gateway = new Gateway();
+            await gateway.Start("localhost", port, "ClientConfiguration.xml");
 
-            var group = new MultithreadEventLoopGroup();
+            Console.ReadLine();
 
-            try
-            {
-                var bootstrap = new Bootstrap();
-                bootstrap
-                    .Group(group)
-                    .Channel<TcpSocketChannel>()
-                    .Option(ChannelOption.TcpNodelay, true)
-                    .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                    {
-                        IChannelPipeline pipeline = channel.Pipeline;
-
-                        pipeline.AddLast(new LengthFieldPrepender(2));
-                        pipeline.AddLast(new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
-
-                        pipeline.AddLast(new ClientHandler());
-                    }));
-
-                IChannel bootstrapChannel = await bootstrap.ConnectAsync(new IPEndPoint(host, port));
-
-                Console.ReadLine();
-
-                await bootstrapChannel.CloseAsync();
-            }
-            finally
-            {
-                group.ShutdownGracefullyAsync().Wait(1000);
-            }
+            await gateway.Stop();
         }
 
-        static void Main() => RunClientAsync().Wait();
+        static void Main() => RunGatewayAsync().Wait();
     }
 }
