@@ -14,6 +14,7 @@ namespace Test.Gateway
     using System.Linq;
     using System.Net;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using GF.Gateway;
 
@@ -21,16 +22,18 @@ namespace Test.Gateway
     {
         static async Task RunGatewayAsync()
         {
-            Console.WriteLine("Gateway Start, ThreadName=" + System.Threading.Thread.CurrentThread.ManagedThreadId);
-
-            IPAddress host = IPAddress.Parse("127.0.0.1");
+            IPAddress host = IPAddress.Parse("192.168.0.10");
             int port = 5882;
             Gateway gateway = new Gateway();
-            await gateway.Start("localhost", port, "ClientConfiguration.xml");
+            await gateway.Start(host, port, "ClientConfiguration.xml");
 
+            Console.WriteLine("Gateway Start ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+            Console.WriteLine("按回车键退出。。。");
             Console.ReadLine();
 
             await gateway.Stop();
+
+            Console.WriteLine("Gateway Stop");
         }
 
         static void Main() => RunGatewayAsync().Wait();

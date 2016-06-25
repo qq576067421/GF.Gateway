@@ -17,6 +17,8 @@ namespace Test.Client
             this.initialMessage = Unpooled.Buffer(256);
             byte[] messageBytes = Encoding.UTF8.GetBytes("Hello world");
             this.initialMessage.WriteBytes(messageBytes);
+
+            Console.WriteLine("Client send Msg!");
         }
 
         public override void ChannelActive(IChannelHandlerContext context)

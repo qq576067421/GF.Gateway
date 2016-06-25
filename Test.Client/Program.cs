@@ -3,6 +3,7 @@
 
 namespace Test.Client
 {
+    using DotNetty.Buffers;
     using DotNetty.Codecs;
     using DotNetty.Common.Internal.Logging;
     using DotNetty.Handlers.Tls;
@@ -20,7 +21,7 @@ namespace Test.Client
     {
         static async Task RunClientAsync()
         {
-            IPAddress host = IPAddress.Parse("127.0.0.1");
+            IPAddress host = IPAddress.Parse("192.168.0.10");
             int port = 5882;
 
             var group = new MultithreadEventLoopGroup();
@@ -36,9 +37,10 @@ namespace Test.Client
                     {
                         IChannelPipeline pipeline = channel.Pipeline;
 
-                        pipeline.AddLast(new LengthFieldPrepender(2));
-                        pipeline.AddLast(new LengthFieldBasedFrameDecoder(ushort.MaxValue, 0, 2, 0, 2));
-
+                        pipeline.AddLast(new LengthFieldPrepender(
+                            ByteOrder.LittleEndian, 2, 0, false));
+                        pipeline.AddLast(new LengthFieldBasedFrameDecoder(
+                            ByteOrder.LittleEndian, ushort.MaxValue, 0, 2, 0, 2, true));
                         pipeline.AddLast(new ClientHandler());
                     }));
 

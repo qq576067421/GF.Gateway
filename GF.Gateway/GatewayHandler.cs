@@ -5,6 +5,8 @@ namespace GF.Gateway
 {
     using System;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using DotNetty.Buffers;
     using DotNetty.Transport.Channels;
 
@@ -15,9 +17,10 @@ namespace GF.Gateway
             var buffer = message as IByteBuffer;
             if (buffer != null)
             {
-                Console.WriteLine("Received from client: " + buffer.ToString(Encoding.UTF8));
+                Console.WriteLine("Received from client! ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+                //Console.WriteLine("Received from client: " + buffer.ToString(Encoding.UTF8));
             }
-            context.WriteAsync(message);
+            //context.WriteAsync(message);
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext context)
