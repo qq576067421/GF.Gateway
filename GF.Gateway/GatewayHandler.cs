@@ -20,7 +20,8 @@ namespace GF.Gateway
                 Console.WriteLine("Received from client! ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
                 //Console.WriteLine("Received from client: " + buffer.ToString(Encoding.UTF8));
             }
-            //context.WriteAsync(message);
+
+            context.WriteAsync(message);
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext context)
