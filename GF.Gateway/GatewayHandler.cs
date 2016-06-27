@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace GF.Gateway
 {
     using System;
+    using System.Net;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -12,6 +12,26 @@ namespace GF.Gateway
 
     public class GatewayHandler : ChannelHandlerAdapter
     {
+        public override void ChannelActive(IChannelHandlerContext context)
+        {
+            Console.WriteLine("ChannelActive ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+        }
+
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            Console.WriteLine("ChannelInactive ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+        }
+
+        public override void ChannelRegistered(IChannelHandlerContext context)
+        {
+            Console.WriteLine("ChannelRegistered ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+        }
+
+        public override void ChannelUnregistered(IChannelHandlerContext context)
+        {
+            Console.WriteLine("ChannelUnregistered ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
+        }
+
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             var buffer = message as IByteBuffer;
@@ -32,6 +52,7 @@ namespace GF.Gateway
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             Console.WriteLine("Exception: " + exception);
+
             context.CloseAsync();
         }
     }

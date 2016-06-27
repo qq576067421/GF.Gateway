@@ -1,5 +1,4 @@
 ﻿// Copyright (c) Cragon. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Test.Client
 {
@@ -21,7 +20,7 @@ namespace Test.Client
     {
         static async Task RunClientAsync()
         {
-            IPAddress host = IPAddress.Parse("192.168.0.10");
+            IPAddress host = IPAddress.Parse("192.168.1.226");
             int port = 5882;
 
             var group = new MultithreadEventLoopGroup();
