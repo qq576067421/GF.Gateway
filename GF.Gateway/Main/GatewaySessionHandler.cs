@@ -19,7 +19,7 @@ namespace GF.Gateway
     using Orleans;
     using GF.Unity.Common;
 
-    public abstract class GatewaySessionHandler
+    public abstract class SessionHandler
     {
         public RpcSession RpcSession { get; set; }
 
@@ -30,5 +30,10 @@ namespace GF.Gateway
         public abstract void OnSocketConnected(object client, EventArgs args);
 
         public abstract void OnSocketClosed(object client, EventArgs args);
+    }
+
+    public abstract class SessionHandlerFactory
+    {
+        public abstract SessionHandler CreateSessionHandler();
     }
 }

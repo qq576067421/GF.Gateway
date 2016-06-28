@@ -24,7 +24,7 @@ namespace GF.Gateway
         IChannel bootstrapChannel = null;
 
         public async Task Start(IPAddress ip_address, int port,
-            string orleansClientConfigFile, GatewaySessionHandler handler)
+            string orleansClientConfigFile, SessionHandlerFactory factory)
         {
             bootstrap
                     .Group(bossGroup, workerGroup)
@@ -38,7 +38,7 @@ namespace GF.Gateway
                             ByteOrder.LittleEndian, 2, 0, false));
                         pipeline.AddLast(new LengthFieldBasedFrameDecoder(
                             ByteOrder.LittleEndian, ushort.MaxValue, 0, 2, 0, 2, true));
-                        pipeline.AddLast(new GatewayChannelHandler(handler));
+                        pipeline.AddLast(new GatewayChannelHandler(factory));
                     }));
 
             bootstrapChannel = await bootstrap.BindAsync(ip_address, port);

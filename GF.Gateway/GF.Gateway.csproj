@@ -130,8 +130,7 @@
   <ItemGroup>
     <Compile Include="Main\Gateway.cs" />
     <Compile Include="Impl\GatewayChannelHandler.cs" />
-    <Compile Include="Impl\GatewayRpcSession.cs" />
-    <Compile Include="Impl\GatewaySettings.cs" />
+    <Compile Include="Impl\GatewaySession.cs" />
     <Compile Include="Impl\GatewayRunner.cs" />
     <Compile Include="Main\GatewaySessionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,23 +5,17 @@ namespace GF.Gateway
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using DotNetty.Buffers;
+    using DotNetty.Transport.Channels;
     using GF.Unity.Common;
 
-    public class GatewayRpcSession : RpcSession
+    public class GatewaySession : RpcSession
     {
-        private GatewaySessionHandler value;
+        private SessionHandlerFactory factory;
+        private Dictionary<IChannelHandlerContext, SessionHandler> mapChannel
+            = new Dictionary<IChannelHandlerContext, SessionHandler>();
 
-        public GatewaySessionHandler GatewaySessionHandler
-        {
-            get { return value; }
-            set
-            {
-                value.RpcSession = this;
-                value.OnDefRpcMethod();
-            }
-        }
-
-        public GatewayRpcSession(EntityMgr entity_mgr)
+        public GatewaySession(EntityMgr entity_mgr)
         {
             //mSocket.OnSocketReceive += _onSocketReceive;
             //mSocket.OnSocketConnected += _onSocketConnected;
@@ -29,16 +23,31 @@ namespace GF.Gateway
             //mSocket.OnSocketError += _onSocketError;
         }
 
+        public void Init(SessionHandlerFactory factory)
+        {
+            this.factory = factory;
+        }
+
+        public void ChannelActive(IChannelHandlerContext context)
+        {
+            var handler = this.factory.CreateSessionHandler();
+            mapChannel[context] = handler;
+
+            handler.RpcSession = this;
+            handler.OnDefRpcMethod();
+        }
+
+        public void ChannelInactive(IChannelHandlerContext context)
+        {
+        }
+
         public override bool isConnect()
         {
             return true;
-
-            //return mSocket.IsConnected;
         }
 
         public override void connect(string ip, int port)
         {
-            //if (mSocket != null) mSocket.connect(ip, port);
         }
 
         public override void send(ushort method_id, byte[] data)
@@ -47,6 +56,8 @@ namespace GF.Gateway
             //{
             //    mSocket.send(method_id, data);
             //}
+
+            //context.WriteAsync(message);
         }
 
         public override void close()
@@ -56,7 +67,6 @@ namespace GF.Gateway
 
         public override void update(float elapsed_tm)
         {
-            //if (mSocket != null) mSocket.update(elapsed_tm);
         }
 
         public void onRecvData(byte[] data)
@@ -105,11 +115,11 @@ namespace GF.Gateway
         }
     }
 
-    public class GatewayRpcSessionFactory : RpcSessionFactory
+    public class GatewaySessionFactory : RpcSessionFactory
     {
         public override RpcSession createRpcSession(EntityMgr entity_mgr)
         {
-            return new GatewayRpcSession(entity_mgr);
+            return new GatewaySession(entity_mgr);
         }
     }
 }

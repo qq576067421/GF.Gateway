@@ -21,20 +21,20 @@ namespace GF.Gateway
     public class Gateway
     {
         public static Gateway Instance { get; private set; }
-        public GatewayRpcSessionFactory GatewayRpcSessionFactory { get; private set; }
+        public GatewaySessionFactory GatewaySessionFactory { get { return this.gatewaySessionFactory; } }
 
+        GatewaySessionFactory gatewaySessionFactory = new GatewaySessionFactory();
         GatewayRunner gatewayRunner = new GatewayRunner();
 
         public Gateway()
         {
             Instance = this;
-            GatewayRpcSessionFactory = new GatewayRpcSessionFactory();
         }
 
         public Task Start(IPAddress ip_address, int port,
-            string orleansClientConfigFile, GatewaySessionHandler handler)
+            string orleansClientConfigFile, SessionHandlerFactory factory)
         {
-            return this.gatewayRunner.Start(ip_address, port, orleansClientConfigFile, handler);
+            return this.gatewayRunner.Start(ip_address, port, orleansClientConfigFile, factory);
         }
 
         public Task Stop()

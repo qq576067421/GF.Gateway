@@ -24,11 +24,11 @@ namespace Test.Gateway
             EbLog.WarningCallback = Console.WriteLine;
             EbLog.ErrorCallback = Console.WriteLine;
 
-            IPAddress host = IPAddress.Parse("192.168.1.226");
+            IPAddress host = IPAddress.Parse("192.168.0.10");
             int port = 5882;
             Gateway gateway = new Gateway();
-            SessionHandler handler = new SessionHandler();
-            await gateway.Start(host, port, "ClientConfiguration.xml", handler);
+            GatewaySessionHandlerFactory factory = new GatewaySessionHandlerFactory();
+            await gateway.Start(host, port, "ClientConfiguration.xml", factory);
 
             Console.WriteLine("Gateway Start ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
             Console.WriteLine("按回车键退出。。。");

@@ -19,7 +19,7 @@ namespace Test.Gateway
     using GF.Unity.Common;
     using GF.Gateway;
 
-    public class SessionHandler : GatewaySessionHandler
+    public class GatewaySessionHandler : SessionHandler
     {
         public override void OnDefRpcMethod()
         {
@@ -41,6 +41,14 @@ namespace Test.Gateway
         void _onRpcMethod1(string info)
         {
             Console.WriteLine(info);
+        }
+    }
+
+    public class GatewaySessionHandlerFactory : SessionHandlerFactory
+    {
+        public override SessionHandler CreateSessionHandler()
+        {
+            return new GatewaySessionHandler();
         }
     }
 }
