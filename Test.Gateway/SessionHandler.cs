@@ -23,7 +23,7 @@ namespace Test.Gateway
     {
         public override void OnDefRpcMethod()
         {
-            RpcSession.defRpcMethod<string>(100, _onRpcMethod1);
+            RpcSession.defRpcMethod<int, string>(2, _onRpcMethod1);
         }
 
         public override void OnSocketError(object rec, SocketErrorEventArgs args)
@@ -38,9 +38,12 @@ namespace Test.Gateway
         {
         }
 
-        void _onRpcMethod1(string info)
+        void _onRpcMethod1(int v, string info)
         {
+            Console.WriteLine(v);
             Console.WriteLine(info);
+
+            this.RpcSession.rpc(1, 200, "Hi");
         }
     }
 

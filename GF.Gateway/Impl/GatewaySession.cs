@@ -16,7 +16,6 @@ namespace GF.Gateway
 
         public GatewaySession(EntityMgr entity_mgr)
         {
-            //mSocket.OnSocketReceive += _onSocketReceive;
             //mSocket.OnSocketConnected += _onSocketConnected;
             //mSocket.OnSocketClosed += _onSocketClosed;
             //mSocket.OnSocketError += _onSocketError;
@@ -46,17 +45,16 @@ namespace GF.Gateway
 
         public override void send(ushort method_id, byte[] data)
         {
-            //if (mSocket != null)
-            //{
-            //    mSocket.send(method_id, data);
-            //}
+            IByteBuffer msg = PooledByteBufferAllocator.Default.Buffer(256);
+            msg.WriteBytes(BitConverter.GetBytes(method_id));
+            if (data != null) msg.WriteBytes(data);
 
-            //this.context.WriteAsync(message);
+            context.WriteAndFlushAsync(msg);
         }
 
         public override void close()
         {
-            //if (mSocket != null) mSocket.close();
+            context.CloseAsync();
         }
 
         public override void update(float elapsed_tm)
@@ -64,11 +62,6 @@ namespace GF.Gateway
         }
 
         public void onRecvData(byte[] data)
-        {
-            _onSocketReceive(data, data.Length);
-        }
-
-        void _onSocketReceive(byte[] data, int len)
         {
             ushort method_id = BitConverter.ToUInt16(data, 0);
 

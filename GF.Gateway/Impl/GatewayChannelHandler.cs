@@ -47,12 +47,13 @@ namespace GF.Gateway
 
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
-            var buffer = message as IByteBuffer;
+            var msg = message as IByteBuffer;
+            msg.WithOrder(ByteOrder.BigEndian);
 
             GatewaySession session = null;
             if (mapSession.TryGetValue(context, out session))
             {
-                session.onRecvData(buffer.ToArray());
+                session.onRecvData(msg.ToArray());
             }
         }
 
