@@ -19,8 +19,14 @@ namespace Test.Gateway
 
     class Program
     {
+        Gateway Gateway = new Gateway();
+
         static async Task RunGatewayAsync()
         {
+            EbLog.NoteCallback = Console.WriteLine;
+            EbLog.WarningCallback = Console.WriteLine;
+            EbLog.ErrorCallback = Console.WriteLine;
+
             IPAddress host = IPAddress.Parse("192.168.1.226");
             int port = 5882;
             Gateway gateway = new Gateway();

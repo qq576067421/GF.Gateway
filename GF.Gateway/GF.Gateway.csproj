@@ -128,9 +128,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GatewayHandler.cs" />
-    <Compile Include="GatewaySettings.cs" />
     <Compile Include="Gateway.cs" />
+    <Compile Include="GatewayHandler.cs" />
+    <Compile Include="GatewayRpcSession.cs" />
+    <Compile Include="GatewaySettings.cs" />
+    <Compile Include="GatewayRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

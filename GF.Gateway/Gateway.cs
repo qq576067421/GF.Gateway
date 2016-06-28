@@ -20,45 +20,25 @@ namespace GF.Gateway
 
     public class Gateway
     {
-        MultithreadEventLoopGroup bossGroup = new MultithreadEventLoopGroup(4);
-        MultithreadEventLoopGroup workerGroup = new MultithreadEventLoopGroup(4);
-        ServerBootstrap bootstrap = new ServerBootstrap();
-        IChannel bootstrapChannel = null;
+        public GatewayRpcSessionFactory GatewayRpcSessionFactory { get; private set; }
+        public static Gateway Instance { get; private set; }
 
-        public async Task Start(IPAddress ip_address, int port, string orleansClientConfigFile)
+        GatewayRunner GatewayRunner = new GatewayRunner();
+
+        public Gateway()
         {
-            bootstrap
-                    .Group(bossGroup, workerGroup)
-                    .Channel<TcpServerSocketChannel>()
-                    .Option(ChannelOption.SoBacklog, 100)
-                    .Handler(new LoggingHandler(LogLevel.INFO))
-                    .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
-                    {
-                        IChannelPipeline pipeline = channel.Pipeline;
-                        pipeline.AddLast(new LengthFieldPrepender(
-                            ByteOrder.LittleEndian, 2, 0, false));
-                        pipeline.AddLast(new LengthFieldBasedFrameDecoder(
-                            ByteOrder.LittleEndian, ushort.MaxValue, 0, 2, 0, 2, true));
-                        pipeline.AddLast(new GatewayHandler());
-                    }));
-
-            bootstrapChannel = await bootstrap.BindAsync(ip_address, port);
-
-            GrainClient.Initialize(orleansClientConfigFile);
+            Instance = this;
+            GatewayRpcSessionFactory = new GatewayRpcSessionFactory();
         }
 
-        public async Task Stop()
+        public Task Start(IPAddress ip_address, int port, string orleansClientConfigFile)
         {
-            try
-            {
-                GrainClient.Uninitialize();
+            return GatewayRunner.Start(ip_address, port, orleansClientConfigFile);
+        }
 
-                await bootstrapChannel.CloseAsync();
-            }
-            finally
-            {
-                Task.WaitAll(bossGroup.ShutdownGracefullyAsync(), workerGroup.ShutdownGracefullyAsync());
-            }
+        public Task Stop()
+        {
+            return GatewayRunner.Stop();
         }
     }
 }
