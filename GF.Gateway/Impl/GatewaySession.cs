@@ -11,9 +11,8 @@ namespace GF.Gateway
 
     public class GatewaySession : RpcSession
     {
-        private SessionHandlerFactory factory;
-        private Dictionary<IChannelHandlerContext, SessionHandler> mapChannel
-            = new Dictionary<IChannelHandlerContext, SessionHandler>();
+        private IChannelHandlerContext context;
+        private SessionHandler handler;
 
         public GatewaySession(EntityMgr entity_mgr)
         {
@@ -23,15 +22,10 @@ namespace GF.Gateway
             //mSocket.OnSocketError += _onSocketError;
         }
 
-        public void Init(SessionHandlerFactory factory)
+        public void ChannelActive(IChannelHandlerContext context, SessionHandler handler)
         {
-            this.factory = factory;
-        }
-
-        public void ChannelActive(IChannelHandlerContext context)
-        {
-            var handler = this.factory.CreateSessionHandler();
-            mapChannel[context] = handler;
+            this.context = context;
+            this.handler = handler;
 
             handler.RpcSession = this;
             handler.OnDefRpcMethod();
@@ -57,7 +51,7 @@ namespace GF.Gateway
             //    mSocket.send(method_id, data);
             //}
 
-            //context.WriteAsync(message);
+            //this.context.WriteAsync(message);
         }
 
         public override void close()

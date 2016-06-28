@@ -3,6 +3,7 @@
 namespace GF.Gateway
 {
     using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Text;
     using System.Threading;
@@ -13,18 +14,23 @@ namespace GF.Gateway
 
     public class GatewayChannelHandler : ChannelHandlerAdapter
     {
-        private GatewaySession session;
+        private SessionHandlerFactory factory;
+        private Dictionary<IChannelHandlerContext, GatewaySession> mapSession
+            = new Dictionary<IChannelHandlerContext, GatewaySession>();
 
         public GatewayChannelHandler(SessionHandlerFactory factory)
         {
-            EntityMgr entity_mgr = null;
-            this.session = (GatewaySession)Gateway.Instance.GatewaySessionFactory.createRpcSession(entity_mgr);
-            this.session.Init(factory);
+            this.factory = factory;
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            this.session.ChannelActive(context);
+            var handler = this.factory.CreateSessionHandler();
+            var session = (GatewaySession)Gateway.Instance.GatewaySessionFactory.createRpcSession(null);
+
+            session.ChannelActive(context, handler);
+
+            mapSession[context] = session;
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
@@ -42,7 +48,12 @@ namespace GF.Gateway
         public override void ChannelRead(IChannelHandlerContext context, object message)
         {
             var buffer = message as IByteBuffer;
-            this.session.onRecvData(buffer.ToArray());
+
+            GatewaySession session = null;
+            if (mapSession.TryGetValue(context, out session))
+            {
+                session.onRecvData(buffer.ToArray());
+            }
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext context)
