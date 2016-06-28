@@ -5,8 +5,6 @@ namespace GF.Gateway
     using System;
     using System.Collections.Generic;
     using System.Net;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using DotNetty.Buffers;
     using DotNetty.Codecs;
@@ -20,13 +18,13 @@ namespace GF.Gateway
 
     public class GatewayRunner
     {
-        //GatewayRpcSessionFactory GatewayRpcSessionFactory
         MultithreadEventLoopGroup bossGroup = new MultithreadEventLoopGroup(4);
         MultithreadEventLoopGroup workerGroup = new MultithreadEventLoopGroup(4);
         ServerBootstrap bootstrap = new ServerBootstrap();
         IChannel bootstrapChannel = null;
 
-        public async Task Start(IPAddress ip_address, int port, string orleansClientConfigFile)
+        public async Task Start(IPAddress ip_address, int port,
+            string orleansClientConfigFile, GatewaySessionHandler handler)
         {
             bootstrap
                     .Group(bossGroup, workerGroup)
@@ -40,7 +38,7 @@ namespace GF.Gateway
                             ByteOrder.LittleEndian, 2, 0, false));
                         pipeline.AddLast(new LengthFieldBasedFrameDecoder(
                             ByteOrder.LittleEndian, ushort.MaxValue, 0, 2, 0, 2, true));
-                        pipeline.AddLast(new GatewayHandler());
+                        pipeline.AddLast(new GatewayChannelHandler(handler));
                     }));
 
             bootstrapChannel = await bootstrap.BindAsync(ip_address, port);

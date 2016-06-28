@@ -10,7 +10,6 @@ namespace Test.Gateway
     using DotNetty.Transport.Channels.Sockets;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Text;
     using System.Threading;
@@ -19,8 +18,6 @@ namespace Test.Gateway
 
     class Program
     {
-        Gateway Gateway = new Gateway();
-
         static async Task RunGatewayAsync()
         {
             EbLog.NoteCallback = Console.WriteLine;
@@ -30,7 +27,8 @@ namespace Test.Gateway
             IPAddress host = IPAddress.Parse("192.168.1.226");
             int port = 5882;
             Gateway gateway = new Gateway();
-            await gateway.Start(host, port, "ClientConfiguration.xml");
+            SessionHandler handler = new SessionHandler();
+            await gateway.Start(host, port, "ClientConfiguration.xml", handler);
 
             Console.WriteLine("Gateway Start ManagedThreadId=" + Thread.CurrentThread.ManagedThreadId);
             Console.WriteLine("按回车键退出。。。");

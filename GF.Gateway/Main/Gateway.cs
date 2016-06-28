@@ -20,10 +20,10 @@ namespace GF.Gateway
 
     public class Gateway
     {
-        public GatewayRpcSessionFactory GatewayRpcSessionFactory { get; private set; }
         public static Gateway Instance { get; private set; }
+        public GatewayRpcSessionFactory GatewayRpcSessionFactory { get; private set; }
 
-        GatewayRunner GatewayRunner = new GatewayRunner();
+        GatewayRunner gatewayRunner = new GatewayRunner();
 
         public Gateway()
         {
@@ -31,14 +31,15 @@ namespace GF.Gateway
             GatewayRpcSessionFactory = new GatewayRpcSessionFactory();
         }
 
-        public Task Start(IPAddress ip_address, int port, string orleansClientConfigFile)
+        public Task Start(IPAddress ip_address, int port,
+            string orleansClientConfigFile, GatewaySessionHandler handler)
         {
-            return GatewayRunner.Start(ip_address, port, orleansClientConfigFile);
+            return this.gatewayRunner.Start(ip_address, port, orleansClientConfigFile, handler);
         }
 
         public Task Stop()
         {
-            return GatewayRunner.Stop();
+            return this.gatewayRunner.Stop();
         }
     }
 }

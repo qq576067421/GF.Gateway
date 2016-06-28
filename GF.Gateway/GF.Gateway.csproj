@@ -128,11 +128,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gateway.cs" />
-    <Compile Include="GatewayHandler.cs" />
-    <Compile Include="GatewayRpcSession.cs" />
-    <Compile Include="GatewaySettings.cs" />
-    <Compile Include="GatewayRunner.cs" />
+    <Compile Include="Main\Gateway.cs" />
+    <Compile Include="Impl\GatewayChannelHandler.cs" />
+    <Compile Include="Impl\GatewayRpcSession.cs" />
+    <Compile Include="Impl\GatewaySettings.cs" />
+    <Compile Include="Impl\GatewayRunner.cs" />
+    <Compile Include="Main\GatewaySessionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
